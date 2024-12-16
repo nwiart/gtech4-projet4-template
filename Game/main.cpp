@@ -1,21 +1,14 @@
+#include "GameManager.h"
+
 #include <SFML/Graphics.hpp>
 
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(1280, 720), "Casse-Briques");
+	//std::unique_ptr<GameManager> gameManager = std::make_unique<GameManager>();
+	GameManager& gameManager = GameManager::getInstance();
 
-	while (window.isOpen()) {
-		sf::Event event;
-		while (window.pollEvent(event)) {
-			if (event.type == sf::Event::Closed) {
-				window.close();
-			}
-		}
-
-		window.clear();
-		window.display();
-	}
+	gameManager.run();
 
 	return 0;
 }
