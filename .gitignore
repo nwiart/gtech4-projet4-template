@@ -1,0 +1,6 @@
+.vs/
+/x64/
+/Game/x64
+/RenderRL/x64
+/RenderSDL/x64
+*.txt
