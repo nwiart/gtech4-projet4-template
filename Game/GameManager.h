@@ -1,55 +1,8 @@
 #pragma once
 
-#include "System/PhysicsSystem.h"
-#include "System/RenderSystem.h"
+#include "System/SystemStorage.h"
 
 class GameObject;
-
-
-template<typename ProcessType>
-class ProcessWrapper
-{
-public:
-
-	void add(GameObject& obj)
-	{
-		m_data.add(obj);
-	}
-
-	inline ProcessType& getInstance() { return m_data; }
-
-private:
-
-	ProcessType m_data;
-};
-
-template<typename... ProcessType>
-class ProcessStorage
-	: public ProcessWrapper<ProcessType>...
-{
-public:
-
-	template<typename... Components>
-	void addC(GameObject& obj)
-	{
-		getProcess<ProcessType::Components...>().add(obj);
-	}
-
-	template<typename... SystemT>
-	void add(GameObject& obj)
-	{
-		(ProcessWrapper<SystemT>::add(obj), ...);
-	}
-
-	template<typename... Components>
-	void remove(GameObject& obj)
-	{
-		getProcess<ProcessType::Components...>().remove(obj);
-	}
-	
-	template<typename SystemType>
-	inline SystemType& getProcess() { return ProcessWrapper<SystemType>::getInstance(); }
-};
 
 
 class GameManager
@@ -64,10 +17,10 @@ public:
 
 	void run();
 
-	template<typename... SystemT>
+	template<typename... Systems>
 	void addComponents(GameObject& obj)
 	{
-		g_processes.add<SystemT...>(obj);
+		g_systems.add<Systems...>(obj);
 	}
 
 	template<typename T>
@@ -76,11 +29,7 @@ public:
 
 private:
 
-	ProcessStorage<
-		PhysicsSystem,
-		RenderSystem
-	>
-	g_processes;
+	SystemStorage g_systems;
 };
 
 

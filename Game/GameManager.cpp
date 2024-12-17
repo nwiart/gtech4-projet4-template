@@ -1,5 +1,8 @@
 #include "GameManager.h"
 
+#include "Scene/Scene.h"
+#include "Scene/GameObject.h"
+
 
 GameManager& GameManager::getInstance()
 {
@@ -12,15 +15,9 @@ GameManager::GameManager()
 
 }
 
-#include "Scene/Scene.h"
-#include "Scene/GameObject.h"
-
-#include "System/RenderSystem.h"
-#include "System/PhysicsSystem.h"
-
 void GameManager::run()
 {
-	RenderSystem& renderSys = g_processes.getProcess<RenderSystem>();
+	RenderSystem& renderSys = g_systems.getSystem<RenderSystem>();
 	sf::RenderWindow& window = renderSys.getSfmlWindow();
 
 	Scene scene;
