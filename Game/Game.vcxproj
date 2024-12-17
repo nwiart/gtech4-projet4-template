@@ -134,6 +134,10 @@
     <ClCompile Include="Component\RenderComponent.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ScoreManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ScoreManager.h" />
     <ClCompile Include="Scene\GameObject.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="System\RenderSystem.cpp" />

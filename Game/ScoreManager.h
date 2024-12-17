@@ -14,6 +14,7 @@ public:
         static ScoreManager inst;
         return inst;
     }
+
 private:
     int currentScore;
 
