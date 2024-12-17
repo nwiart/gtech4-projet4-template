@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GameManager.h"
+#include "IncludeSFML.h"
 
 #include <stdint.h>
 
@@ -21,7 +22,12 @@ public:
 
 	inline operator uint32_t() const { return m_id; }
 
+	void setPosition(const sf::Vector2f& newPosition);
+	const sf::Vector2f& getPosition() const { return position; }
+
 private:
 
 	uint32_t m_id;
+	sf::Vector2f position;
+
 };
