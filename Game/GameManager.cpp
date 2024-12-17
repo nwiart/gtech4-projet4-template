@@ -15,13 +15,20 @@ GameManager::GameManager()
 #include "Scene/Scene.h"
 #include "Scene/GameObject.h"
 
+#include "System/RenderSystem.h"
+#include "System/PhysicsSystem.h"
+
 void GameManager::run()
 {
-	sf::RenderWindow& window = m_renderSystem.getSfmlWindow();
+	RenderSystem& renderSys = g_processes.getProcess<RenderSystem>();
+	sf::RenderWindow& window = renderSys.getSfmlWindow();
 
 	Scene scene;
 	GameObject* obj = scene.instantiateObject();
 	auto rc = obj->addComponent<RenderComponent>();
+
+	GameObject* obj2 = scene.instantiateObject();
+	addComponents<RenderSystem, PhysicsSystem>(*obj2);
 
 	while (window.isOpen()) {
 		sf::Event event;
@@ -31,6 +38,6 @@ void GameManager::run()
 			}
 		}
 
-		m_renderSystem.update();
+		renderSys.update();
 	}
 }

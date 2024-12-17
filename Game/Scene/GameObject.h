@@ -9,12 +9,12 @@ class GameObject
 {
 public:
 
-	GameObject();
+	GameObject() : m_id(-1) { }
 
 	template<typename T>
 	T* addComponent()
 	{
-		return GameManager::getInstance().addComponentToObject<T>(this);
+		return GameManager::getInstance().addComponentToObject<T>(*this);
 	}
 
 	inline uint32_t getID() const { return m_id; }

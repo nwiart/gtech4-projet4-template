@@ -8,6 +8,10 @@ class System
 {
 public:
 
+	typedef ComponentType _ComponentType;
+
+public:
+
 	ComponentType* add(GameObject& obj) { return 0; }
 
 	void remove(GameObject& obj) { }

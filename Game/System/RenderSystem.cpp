@@ -10,7 +10,7 @@ RenderSystem::RenderSystem()
 
 RenderComponent* RenderSystem::add(GameObject& obj)
 {
-	auto p = m_components.emplace(obj);
+	auto p = m_components.emplace(obj, RenderComponent{ });
 	RenderComponent& c = p.first->second;
 	return &c;
 }

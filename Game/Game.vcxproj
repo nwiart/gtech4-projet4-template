@@ -106,6 +106,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)SFML-2.6.2\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,6 +132,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Component\PhysicsComponent.cpp" />
+    <ClCompile Include="System\PhysicsSystem.cpp" />
     <ClCompile Include="Component\RenderComponent.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="main.cpp" />
@@ -138,6 +141,8 @@
     <ClCompile Include="TActor.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Component\PhysicsComponent.h" />
+    <ClInclude Include="System\PhysicsSystem.h" />
     <ClInclude Include="System\ScoreManager.h" />
     <ClCompile Include="Scene\GameObject.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
@@ -148,6 +153,7 @@
     <ClInclude Include="Component\RenderComponent.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Scene\GameObject.h" />
+    <ClInclude Include="Scene\GameObjectTemplate.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="System\System.h" />
     <ClInclude Include="System\RenderSystem.h" />

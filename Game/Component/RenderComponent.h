@@ -3,5 +3,7 @@
 
 class RenderComponent
 {
+public:
 
+	RenderComponent() { }
 };
