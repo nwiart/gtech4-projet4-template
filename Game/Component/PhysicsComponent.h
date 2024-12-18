@@ -16,9 +16,6 @@ public:
 
 	void setVelocity(sf::Vector2f& newVelocity);
 
-	bool intersects(PhysicsComponent& pc, sf::RectangleShape& other);
-	bool intersects(PhysicsComponent& pc, sf::CircleShape& other);
-
 
 	const sf::Vector2f& getVelocity() const { return velocity; }
 

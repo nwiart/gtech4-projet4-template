@@ -15,6 +15,8 @@ public:
 	template<typename ComponentType>
 	inline ComponentType& get(GameObject& obj) { return m_data.get(obj); }
 
+	inline bool has(GameObject& obj) { return m_data.isRegistered(obj); }
+
 	inline SystemType& getInstance() { return m_data; }
 
 private:
@@ -53,15 +55,25 @@ public:
 		return SystemData<ComponentType::SystemType>::get<ComponentType>(obj);
 	}
 
+	template<typename ComponentType>
+	bool has(GameObject& obj)
+	{
+		return SystemData<ComponentType::SystemType>::has(obj);
+	}
+
 	template<typename SystemType>
 	inline SystemType& getSystem() { return SystemData<SystemType>::getInstance(); }
 };
 
 
+#include "System/RectSystem.h"
+#include "System/CircleSystem.h"
 #include "System/PhysicsSystem.h"
 #include "System/RenderSystem.h"
 
 typedef SystemStorageBase<
+	RectSystem,
+	CircleSystem,
 	PhysicsSystem,
 	RenderSystem
 >

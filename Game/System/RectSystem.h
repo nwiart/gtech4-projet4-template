@@ -18,6 +18,8 @@ public:
 
     RectComponent& get(GameObject& obj);
 
+    bool isRegistered(GameObject& obj) const;
+
 private:
     std::unordered_map<uint32_t, RectComponent> m_component;
 };

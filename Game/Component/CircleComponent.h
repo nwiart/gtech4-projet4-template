@@ -4,6 +4,9 @@
 class CircleComponent
 {
 public:
+
+    typedef class CircleSystem SystemType;
+
     sf::Shape* getShape() { return &m_shape; }
 
 private:

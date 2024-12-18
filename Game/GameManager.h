@@ -30,7 +30,13 @@ public:
 	template<typename T>
 	T& getObjectComponent(GameObject& obj)
 	{
-		g_systems.get<T>(obj);
+		return g_systems.get<T>(obj);
+	}
+
+	template<typename T>
+	bool hasComponent(GameObject& obj)
+	{
+		return g_systems.has<T>(obj);
 	}
 
 	GameObject* getObjectByID(uint32_t id);

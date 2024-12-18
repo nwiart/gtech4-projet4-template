@@ -15,13 +15,3 @@ void PhysicsComponent::setVelocity(sf::Vector2f& newVelocity)
 {
     velocity = newVelocity;
 }
-
-bool PhysicsComponent::intersects(PhysicsComponent& pc, sf::RectangleShape& other)
-{
-    return pc.getGlobalBounds().intersects(other.getGlobalBounds());
-}
-
-bool PhysicsComponent::intersects(PhysicsComponent& pc, sf::CircleShape& other)
-{
-    return false;
-}

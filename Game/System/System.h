@@ -17,4 +17,6 @@ public:
 	void remove(GameObject& obj) { }
 
 	void update() { }
+
+	bool isRegistered(GameObject& obj) const { return false; }
 };

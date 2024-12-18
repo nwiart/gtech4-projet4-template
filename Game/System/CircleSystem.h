@@ -17,6 +17,8 @@ public:
 
     CircleComponent& get(GameObject& obj);
 
+    bool isRegistered(GameObject& obj) const;
+
 private:
     std::unordered_map<uint32_t, CircleComponent> m_component;
 };

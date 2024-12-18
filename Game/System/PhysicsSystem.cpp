@@ -2,6 +2,11 @@
 #include "PhysicsSystem.h"
 #include "Scene/GameObject.h"
 
+#include "System/RectSystem.h"
+#include "System/CircleSystem.h"
+#include "Component/RectComponent.h"
+#include "Component/CircleComponent.h"
+
 #include <vector>
 
 PhysicsSystem::PhysicsSystem()
@@ -10,49 +15,119 @@ PhysicsSystem::PhysicsSystem()
 
 PhysicsComponent *PhysicsSystem::add(GameObject &obj)
 {
-	auto p = m_components.emplace(obj, PhysicsComponent{});
-	PhysicsComponent &c = p.first->second;
-	return &c;
+	auto p = m_colliders.emplace(obj, ObjectInfo{{}, &obj, UNKNOWN});
+	ObjectInfo& coll = p.first->second;
+
+	if (obj.hasComponent<RectComponent>()) {
+		coll.m_type = RECT;
+	}
+	else if (obj.hasComponent<CircleComponent>()) {
+		coll.m_type = CIRCLE;
+	}
+	else {
+		coll.m_type = UNKNOWN;
+	}
+
+	return &coll.m_component;
 }
 
 void PhysicsSystem::remove(GameObject &obj)
 {
-	m_components.erase(obj);
+	m_colliders.erase(obj);
 }
 
 void PhysicsSystem::update(float dt)
 {
-	std::vector<PhysicsComponent *> allComponents;
-	allComponents.reserve(m_components.size());
+	std::vector<ObjectInfo*> allColliders;
+	allColliders.reserve(m_colliders.size());
 
 	// Integrate.
-	for (auto &[id, component] : m_components)
+	for (auto &[id, collider] : m_colliders)
 	{
+		PhysicsComponent& component = collider.m_component;
 		GameObject *obj = GameManager::getInstance().getObjectByID(id);
 		obj->setPosition(obj->getPosition() + component.velocity * dt);
 
-		allComponents.push_back(&component);
+		allColliders.push_back(&collider);
 	}
 
 	// Collision test.
-	for (int i = 0; i < allComponents.size(); i++)
+	for (int i = 0; i < allColliders.size(); i++)
 	{
-		for (int j = i + 1; j < allComponents.size(); j++)
-		{
-		}
-	}
-	for (auto &[id, component] : m_components)
-	{
-		GameObject *obj = GameManager::getInstance().getObjectByID(id);
+		ObjectInfo* objA = allColliders[i];
+		sf::Shape* shapeA = getObjectShape(objA->m_gameObjectID);
 
-		// RectComponent& rect = obj->getComponent<RectComponent>();
+		for (int j = i + 1; j < allColliders.size(); j++)
+		{
+			ObjectInfo* objB = allColliders[j];
+			sf::Shape* shapeB = getObjectShape(objB->m_gameObjectID);
+
+			bool res = intersect(shapeA, shapeB, objA->m_type, objB->m_type);
+
+		}
 	}
 }
 
 PhysicsComponent &PhysicsSystem::get(GameObject &obj)
 {
-	if (auto it = m_components.find(obj); it != m_components.end())
+	if (auto it = m_colliders.find(obj); it != m_colliders.end())
 	{
-		return it->second;
+		return it->second.m_component;
 	}
+}
+
+bool PhysicsSystem::isRegistered(GameObject& obj) const
+{
+	auto it = m_colliders.find(obj);
+	return it != m_colliders.end();
+}
+
+sf::Shape* PhysicsSystem::getObjectShape(GameObject* obj) const
+{
+	auto it = m_colliders.find(obj->getID());
+	if (it == m_colliders.end()) {
+		return 0;
+	}
+
+	switch (it->second.m_type)
+	{
+	case RECT: return obj->getComponent<RectComponent>().getShape();
+	case CIRCLE: return obj->getComponent<CircleComponent>().getShape();
+	default: return 0;
+	}
+}
+
+bool PhysicsSystem::intersect(sf::Shape* shapeA, sf::Shape* shapeB, ColliderType typeA, ColliderType typeB) const
+{
+	uint32_t collPair = makeColliderTypePair(typeA, typeB);
+
+	// Dispatch collisions.
+	switch (collPair)
+	{
+	// Rect-Rect collision.
+	case RECT | (RECT << 16):
+		return intersect(reinterpret_cast<sf::RectangleShape*>(shapeA), reinterpret_cast<sf::RectangleShape*>(shapeB));
+
+	// Rect-Circle collision.
+	case CIRCLE | (RECT << 16):
+		std::swap(shapeA, shapeB);
+	case RECT | (CIRCLE << 16):
+		return intersect(reinterpret_cast<sf::RectangleShape*>(shapeA), reinterpret_cast<sf::CircleShape*>(shapeB));
+
+	// Non-implemented pairs.
+	default:
+		break;
+	}
+
+	return false;
+}
+
+bool PhysicsSystem::intersect(sf::RectangleShape* shapeA, sf::RectangleShape* shapeB) const
+{
+	return shapeA->getGlobalBounds().intersects(shapeB->getGlobalBounds());
+}
+
+bool PhysicsSystem::intersect(sf::RectangleShape* shapeA, sf::CircleShape* shapeB) const
+{
+	return shapeA->getGlobalBounds().intersects(shapeB->getGlobalBounds());
 }

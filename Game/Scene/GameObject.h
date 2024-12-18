@@ -20,7 +20,13 @@ public:
 	template<typename T>
 	T& getComponent()
 	{
-		return GameManager::getInstance().getObjectComponent(*this);
+		return GameManager::getInstance().getObjectComponent<T>(*this);
+	}
+
+	template<typename T>
+	bool hasComponent()
+	{
+		return GameManager::getInstance().hasComponent<T>(*this);
 	}
 
 	inline uint32_t getID() const { return m_id; }

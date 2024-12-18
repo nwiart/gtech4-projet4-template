@@ -22,6 +22,8 @@ public:
 
 	RenderComponent& get(GameObject& obj);
 
+	bool isRegistered(GameObject& obj) const;
+
 	inline sf::RenderWindow& getSfmlWindow() { return m_window; }
 
 

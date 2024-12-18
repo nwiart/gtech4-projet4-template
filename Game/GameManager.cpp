@@ -26,7 +26,11 @@ void GameManager::run()
 	//auto rc = obj->addComponent<RenderComponent>();
 
 	GameObject* obj2 = m_scene->instantiateObject();
-	addComponents<RenderSystem, PhysicsSystem>(*obj2);
+	addComponents<RenderSystem, CircleSystem>(*obj2);
+
+	GameObject* obj3 = m_scene->instantiateObject();
+	addComponents<RenderSystem, CircleSystem>(*obj3);
+	obj3->setPosition(sf::Vector2f( 200, 100));
 
 	while (window.isOpen()) {
 		sf::Event event;
@@ -35,6 +39,11 @@ void GameManager::run()
 				window.close();
 			}
 		}
+
+		obj3->setPosition(obj3->getPosition() + sf::Vector2f(1, 0));
+
+		g_systems.getSystem<RectSystem>().update(0);
+		g_systems.getSystem<CircleSystem>().update(0);
 
 		renderSys.update();
 	}

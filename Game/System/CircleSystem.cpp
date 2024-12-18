@@ -1,4 +1,6 @@
+#include "GameManager.h"
 #include "CircleSystem.h"
+
 #include "Scene/GameObject.h"
 
 CircleSystem::CircleSystem()
@@ -19,7 +21,14 @@ void CircleSystem::remove(GameObject& obj)
 
 void CircleSystem::update(float dt)
 {
-    // Nothing TODO
+    for (auto& [id, comp] : m_component) {
+        GameObject* obj = GameManager::getInstance().getObjectByID(id);
+        sf::CircleShape* shape = reinterpret_cast<sf::CircleShape*>(comp.getShape());
+
+        shape->setPosition(obj->getPosition());
+        shape->setRadius(25.0F);
+        shape->setFillColor(sf::Color::Cyan);
+    }
 }
 
 CircleComponent& CircleSystem::get(GameObject& obj)
@@ -28,4 +37,9 @@ CircleComponent& CircleSystem::get(GameObject& obj)
     {
         return it->second;
     }
+}
+
+bool CircleSystem::isRegistered(GameObject& obj) const
+{
+    return m_component.find(obj) != m_component.end();
 }

@@ -4,6 +4,9 @@
 class RectComponent 
 {
 public:
+    
+    typedef class RectSystem SystemType;
+
     sf::Shape* getShape() { return &m_shape; }
 
 private:

@@ -10,6 +10,20 @@ class PhysicsSystem : public System<PhysicsComponent>
 {
 public:
 
+	enum ColliderType : uint16_t
+	{
+		UNKNOWN,
+		RECT,
+		CIRCLE
+	};
+
+	struct ObjectInfo
+	{
+		PhysicsComponent m_component;
+		GameObject* m_gameObjectID;
+		ColliderType m_type;
+	};
+
 	PhysicsSystem();
 
 	PhysicsComponent* add(GameObject& obj);
@@ -20,8 +34,21 @@ public:
 
 	PhysicsComponent& get(GameObject& obj);
 
+	bool isRegistered(GameObject& obj) const;
+
 
 private:
 
-	std::unordered_map<uint32_t, PhysicsComponent> m_components;
+	inline uint32_t makeColliderTypePair(ColliderType typeA, ColliderType typeB) const { return ((uint32_t) typeA) | (((uint32_t) typeB) << 16); }
+
+	sf::Shape* getObjectShape(GameObject* obj) const;
+
+	bool intersect(sf::Shape* shapeA, sf::Shape* shapeB, ColliderType typeA, ColliderType typeB) const;
+	bool intersect(sf::RectangleShape* shapeA, sf::RectangleShape* shapeB) const;
+	bool intersect(sf::RectangleShape* shapeA, sf::CircleShape* shapeB) const;
+
+
+private:
+
+	std::unordered_map<uint32_t, ObjectInfo> m_colliders;
 };
