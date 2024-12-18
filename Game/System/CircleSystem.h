@@ -1,6 +1,6 @@
 #pragma once
 
-#include "System/System.h"
+#include "System.h"
 #include "Component/CircleComponent.h"
 
 #include <unordered_map>
@@ -11,6 +11,11 @@ public:
     CircleSystem();
     
     CircleComponent* add(GameObject& obj);
+
+    void remove(GameObject& obj);
+    void update(float dt);
+
+    CircleComponent& get(GameObject& obj);
 
 private:
     std::unordered_map<uint32_t, CircleComponent> m_component;
