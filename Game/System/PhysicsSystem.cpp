@@ -1,10 +1,5 @@
 #include "PhysicsSystem.h"
 
-#include "Component/PhysicsComponent.h"
-
-#include "Scene/GameObject.h"
-
-
 PhysicsSystem::PhysicsSystem()
 {
 
