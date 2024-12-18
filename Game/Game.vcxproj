@@ -133,22 +133,27 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Component\PhysicsComponent.cpp" />
+    <ClCompile Include="System\CircleSystem.cpp" />
     <ClCompile Include="System\PhysicsSystem.cpp" />
     <ClCompile Include="Component\RenderComponent.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="System\RectSystem.cpp" />
     <ClCompile Include="System\ScoreManager.cpp" />
-    <ClCompile Include="TActor.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Component\CircleComponent.h" />
     <ClInclude Include="Component\PhysicsComponent.h" />
+    <ClInclude Include="Component\RectComponent.h" />
+    <ClInclude Include="IncludeSFML.h" />
+    <ClInclude Include="System\CircleSystem.h" />
+    <ClInclude Include="System\RectSystem.h" />
     <ClInclude Include="System\SystemStorage.h" />
     <ClInclude Include="System\PhysicsSystem.h" />
     <ClInclude Include="System\ScoreManager.h" />
     <ClCompile Include="Scene\GameObject.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="System\RenderSystem.cpp" />
-    <ClInclude Include="TActor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component\RenderComponent.h" />
