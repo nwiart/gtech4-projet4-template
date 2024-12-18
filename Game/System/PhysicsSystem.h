@@ -3,8 +3,6 @@
 #include "System.h"
 #include "Component/PhysicsComponent.h"
 
-#include <SFML/Graphics.hpp>
-
 #include <unordered_map>
 
 
