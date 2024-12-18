@@ -11,7 +11,7 @@ public:
 
     inline void setColor(sf::Color color) { m_shape.setFillColor(color); }
     inline void setRadius(int radius) { m_shape.setRadius(radius); }
-    inline void setTexture(sf::Texture(text)) { m_shape.setTexture(&text); }
+    inline void setTexture(sf::Texture& text) { m_shape.setTexture(&text); }
 private:
     sf::CircleShape m_shape;
 };
