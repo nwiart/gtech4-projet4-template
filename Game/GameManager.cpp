@@ -72,8 +72,8 @@ void GameManager::run()
 			ballVelocity.y = -ballVelocity.y;
 		}
 
-		sf::FloatRect paddleBounds(paddle->getPosition().x, paddle->getPosition().y, 150, 20);
-		sf::FloatRect ballBounds(ball->getPosition().x, ball->getPosition().y, 20, 20);
+		sf::FloatRect paddleBounds(paddle->getPosition().x, paddle->getPosition().y, paddle->getComponent<RectComponent>().getSizeX(), paddle->getComponent<RectComponent>().getSizeY());
+		sf::FloatRect ballBounds = ball->getComponent<CircleComponent>().getShape()->getGlobalBounds();
 
 		if (paddleBounds.intersects(ballBounds))
 		{
