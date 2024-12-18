@@ -17,6 +17,15 @@ public:
 		CIRCLE
 	};
 
+	enum class ScreenSide
+	{
+		UNKNOWN,
+		LEFT,
+		TOP,
+		RIGHT,
+		BOTTOM
+	};
+
 	struct ObjectInfo
 	{
 		PhysicsComponent m_component;

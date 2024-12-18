@@ -7,7 +7,7 @@ class PhysicsComponent
 {
 	friend class PhysicsSystem;
 
-	typedef bool (*OnCollideScreen)(GameObject& objA, PhysicsComponent& collA);
+	typedef bool (*OnCollideScreen)(GameObject& objA, PhysicsComponent& collA, int side);
 	typedef bool (*OnCollideObject)(GameObject& objA, PhysicsComponent& collA, GameObject& objB, PhysicsComponent& collB);
 
 public:

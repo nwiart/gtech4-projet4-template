@@ -31,10 +31,23 @@ void GameManager::run()
 	ball->setPosition(sf::Vector2f(window.getSize().x / 2, window.getSize().y / 2));
 	ball->getComponent<CircleComponent>().setColor(sf::Color::Red);
 	ball->getComponent<CircleComponent>().setRadius(10);
-	ball->getComponent<PhysicsComponent>().setVelocity(sf::Vector2f(80.0F, 80.0F));
+	ball->getComponent<PhysicsComponent>().setVelocity(sf::Vector2f(300.0F, 300.0F));
 	ball->getComponent<PhysicsComponent>().setCollideObjectCallback([](GameObject& objA, PhysicsComponent& collA, GameObject& objB, PhysicsComponent& collB) -> bool {
 		sf::Vector2f v = collA.getVelocity();
 		v.y = -v.y;
+		v.x = 10.0F * (((objA.getPosition().x + 6.0F) - (objB.getPosition().x + 75.0F)));
+		collA.setVelocity(v);
+		return true;
+	});
+	ball->getComponent<PhysicsComponent>().setCollideScreenCallback([](GameObject& objA, PhysicsComponent& collA, int side) -> bool {
+		sf::Vector2f v = collA.getVelocity();
+		switch ((PhysicsSystem::ScreenSide) side)
+		{
+		case PhysicsSystem::ScreenSide::LEFT:   break;
+		case PhysicsSystem::ScreenSide::TOP:    break;
+		case PhysicsSystem::ScreenSide::RIGHT:  break;
+		case PhysicsSystem::ScreenSide::BOTTOM: break;
+		}
 		collA.setVelocity(v);
 		return true;
 	});
@@ -50,7 +63,7 @@ void GameManager::run()
 			}
 		}
 
-		constexpr float PADDLE_SPEED = 3.0F;
+		constexpr float PADDLE_SPEED = 10.0F;
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 		{
 			if (paddle->getPosition().x > 0)

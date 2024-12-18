@@ -93,6 +93,31 @@ void PhysicsSystem::update(float dt)
 				m_collisionPairs.erase(pairID);
 			}
 		}
+
+		// Border detection.
+		sf::FloatRect bounds = shapeA->getGlobalBounds();
+		PhysicsSystem::ScreenSide side = ScreenSide::UNKNOWN;
+
+		if (bounds.left < 0 && objA->m_component.velocity.x < 0) {
+			objA->m_component.velocity.x = -objA->m_component.velocity.x;
+			side = ScreenSide::LEFT;
+		}
+		if (bounds.left + bounds.width > 1280 && objA->m_component.velocity.x > 0) {
+			objA->m_component.velocity.x = -objA->m_component.velocity.x;
+			side = ScreenSide::RIGHT;
+		}
+		if (bounds.top < 0 && objA->m_component.velocity.y < 0) {
+			objA->m_component.velocity.y = -objA->m_component.velocity.y;
+			side = ScreenSide::TOP;
+		}
+		if (bounds.top + bounds.height > 720 && objA->m_component.velocity.y > 0) {
+			objA->m_component.velocity.y = -objA->m_component.velocity.y;
+			side = ScreenSide::BOTTOM;
+		}
+
+		if (objA->m_component.m_onCollideScreenCallback) {
+			objA->m_component.m_onCollideScreenCallback(*objA->m_gameObject, objA->m_component, (int) side);
+		}
 	}
 }
 
@@ -133,13 +158,13 @@ bool PhysicsSystem::intersect(sf::Shape* shapeA, sf::Shape* shapeB, ColliderType
 	switch (collPair)
 	{
 	// Rect-Rect collision.
-	case RECT | (RECT << 16):
+	case ColliderType::RECT | (ColliderType::RECT << 16):
 		return intersect(reinterpret_cast<sf::RectangleShape*>(shapeA), reinterpret_cast<sf::RectangleShape*>(shapeB));
 
 	// Rect-Circle collision.
-	case CIRCLE | (RECT << 16):
+	case ColliderType::CIRCLE | (ColliderType::RECT << 16):
 		std::swap(shapeA, shapeB);
-	case RECT | (CIRCLE << 16):
+	case ColliderType::RECT | (ColliderType::CIRCLE << 16):
 		return intersect(reinterpret_cast<sf::RectangleShape*>(shapeA), reinterpret_cast<sf::CircleShape*>(shapeB));
 
 	// Non-implemented pairs.
