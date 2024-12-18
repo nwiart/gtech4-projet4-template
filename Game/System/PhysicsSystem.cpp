@@ -55,15 +55,43 @@ void PhysicsSystem::update(float dt)
 	for (int i = 0; i < allColliders.size(); i++)
 	{
 		ObjectInfo* objA = allColliders[i];
-		sf::Shape* shapeA = getObjectShape(objA->m_gameObjectID);
+		sf::Shape* shapeA = getObjectShape(objA->m_gameObject);
 
 		for (int j = i + 1; j < allColliders.size(); j++)
 		{
 			ObjectInfo* objB = allColliders[j];
-			sf::Shape* shapeB = getObjectShape(objB->m_gameObjectID);
+			sf::Shape* shapeB = getObjectShape(objB->m_gameObject);
+
+			uint32_t pairID = objA->m_gameObject->getID() | (objB->m_gameObject->getID() << 16);
+			auto it = m_collisionPairs.find(pairID);
+			if (it != m_collisionPairs.end()) {
+				it->second.m_isFrame = false;
+			}
 
 			bool res = intersect(shapeA, shapeB, objA->m_type, objB->m_type);
+			if (res) {
+				bool newCollision = false;
+				if (it == m_collisionPairs.end()) {
+					newCollision = true;
+					it = m_collisionPairs.emplace(pairID, CollisionPair{pairID, true}).first;
+				}
+				else {
+					it->second.m_isFrame = true;
+				}
 
+				if (newCollision) {
+					if (objA->m_component.m_onCollideObjectCallback) {
+						objA->m_component.m_onCollideObjectCallback(*objA->m_gameObject, objA->m_component, *objB->m_gameObject, objB->m_component);
+					}
+					if (objB->m_component.m_onCollideObjectCallback) {
+						objB->m_component.m_onCollideObjectCallback(*objB->m_gameObject, objB->m_component, *objA->m_gameObject, objA->m_component);
+					}
+				}
+			}
+
+			if (it != m_collisionPairs.end() && !it->second.m_isFrame) {
+				m_collisionPairs.erase(pairID);
+			}
 		}
 	}
 }

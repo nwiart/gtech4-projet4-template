@@ -20,8 +20,14 @@ public:
 	struct ObjectInfo
 	{
 		PhysicsComponent m_component;
-		GameObject* m_gameObjectID;
+		GameObject* m_gameObject;
 		ColliderType m_type;
+	};
+
+	struct CollisionPair
+	{
+		uint32_t m_indices;
+		bool m_isFrame;
 	};
 
 	PhysicsSystem();
@@ -51,4 +57,5 @@ private:
 private:
 
 	std::unordered_map<uint32_t, ObjectInfo> m_colliders;
+	std::unordered_map<uint32_t, CollisionPair> m_collisionPairs;
 };

@@ -21,22 +21,23 @@ void GameManager::run()
 	m_scene = std::make_unique<Scene>();
 
 	GameObject *paddle = m_scene->instantiateObject();
-	addComponents<RenderSystem, RectSystem>(*paddle);
+	addComponents<RectSystem, RenderSystem, PhysicsSystem>(*paddle);
 	paddle->setPosition(sf::Vector2f((window.getSize().x / 2), (window.getSize().y - 100)));
 	paddle->getComponent<RectComponent>().setColor(sf::Color::Green);
 	paddle->getComponent<RectComponent>().setSize(sf::Vector2f(150, 20));
 
 	GameObject* ball = m_scene->instantiateObject();
-	addComponents<RenderSystem, CircleSystem>(*ball);
+	addComponents<CircleSystem, RenderSystem, PhysicsSystem>(*ball);
 	ball->setPosition(sf::Vector2f(window.getSize().x / 2, window.getSize().y / 2));
 	ball->getComponent<CircleComponent>().setColor(sf::Color::Red);
 	ball->getComponent<CircleComponent>().setRadius(10);
-
-	sf::Vector2f ballVelocity(3.0f, -3.0f);
-
-	//GameObject *obj3 = m_scene->instantiateObject();
-	//addComponents<RenderSystem, CircleSystem>(*obj3);
-	//obj3->setPosition(sf::Vector2f(200, 100));
+	ball->getComponent<PhysicsComponent>().setVelocity(sf::Vector2f(80.0F, 80.0F));
+	ball->getComponent<PhysicsComponent>().setCollideObjectCallback([](GameObject& objA, PhysicsComponent& collA, GameObject& objB, PhysicsComponent& collB) -> bool {
+		sf::Vector2f v = collA.getVelocity();
+		v.y = -v.y;
+		collA.setVelocity(v);
+		return true;
+	});
 
 	while (window.isOpen())
 	{
@@ -49,21 +50,23 @@ void GameManager::run()
 			}
 		}
 
-		//if (obj3)
-		//{
-		//	obj3->setPosition(obj3->getPosition() + sf::Vector2f(1, 0));
+		constexpr float PADDLE_SPEED = 3.0F;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+		{
+			if (paddle->getPosition().x > 0)
+			{
+				paddle->setPosition(paddle->getPosition() - sf::Vector2f(PADDLE_SPEED, 0));
+			}
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+		{
+			if (paddle->getPosition().x + 150 < window.getSize().x)
+			{
+				paddle->setPosition(paddle->getPosition() + sf::Vector2f(PADDLE_SPEED, 0));
+			}
+		}
 
-		//	if (obj3->getPosition().x > 300)
-		//	{
-		//		g_systems.remove(*obj3);
-		//		m_scene->destroyObject(obj3);
-		//		obj3 = 0;
-		//	}
-		//}
-
-		ball->setPosition(ball->getPosition() + ballVelocity);
-
-		if (ball->getPosition().x <= 0 || ball->getPosition().x + 20 >= window.getSize().x)
+		/*if (ball->getPosition().x <= 0 || ball->getPosition().x + 20 >= window.getSize().x)
 		{
 			ballVelocity.x = -ballVelocity.x;
 		}
@@ -84,25 +87,13 @@ void GameManager::run()
 		{
 			ball->setPosition(sf::Vector2f(window.getSize().x / 2, window.getSize().y / 2));
 			ballVelocity = sf::Vector2f(3.0f, -3.0f);
-		}
+		}*/
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-		{
-			if (paddle->getPosition().x > 0)
-			{
-				paddle->setPosition(paddle->getPosition() - sf::Vector2f(3.0f, 0));
-			}
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-		{
-			if (paddle->getPosition().x + 150 < window.getSize().x)
-			{
-				paddle->setPosition(paddle->getPosition() + sf::Vector2f(3.0f, 0));
-			}
-		}
 
 		g_systems.getSystem<RectSystem>().update(0);
 		g_systems.getSystem<CircleSystem>().update(0);
+
+		g_systems.getSystem<PhysicsSystem>().update(1.0F / 60.0F);
 
 		renderSys.update();
 	}
