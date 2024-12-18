@@ -1,3 +1,4 @@
+#include "GameManager.h"
 #include "RenderSystem.h"
 
 #include "Scene/GameObject.h"
@@ -25,8 +26,16 @@ void RenderSystem::update()
 	m_window.clear();
 
 	for (auto& [id, component] : m_components) {
+		component.draw(m_window);
 		//m_window.draw(component)
 	}
 
 	m_window.display();
+}
+
+RenderComponent& RenderSystem::get(GameObject& obj)
+{
+	if (auto it = m_components.find(obj); it != m_components.end()) {
+		return it->second;
+	}
 }

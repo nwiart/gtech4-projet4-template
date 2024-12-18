@@ -1,6 +1,5 @@
 #pragma once
 
-#include "GameManager.h"
 #include "IncludeSFML.h"
 
 #include <stdint.h>
@@ -10,12 +9,18 @@ class GameObject
 {
 public:
 
-	GameObject() : m_id(-1) { }
+	GameObject(uint32_t id) : m_id(id) { }
 
 	template<typename T>
 	T* addComponent()
 	{
 		return GameManager::getInstance().addComponentToObject<T>(*this);
+	}
+
+	template<typename T>
+	T& getComponent()
+	{
+		return GameManager::getInstance().getObjectComponent(*this);
 	}
 
 	inline uint32_t getID() const { return m_id; }
@@ -29,5 +34,4 @@ private:
 
 	uint32_t m_id;
 	sf::Vector2f position;
-
 };

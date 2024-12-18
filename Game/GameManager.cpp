@@ -20,11 +20,12 @@ void GameManager::run()
 	RenderSystem& renderSys = g_systems.getSystem<RenderSystem>();
 	sf::RenderWindow& window = renderSys.getSfmlWindow();
 
-	Scene scene;
-	GameObject* obj = scene.instantiateObject();
-	auto rc = obj->addComponent<RenderComponent>();
+	m_scene = std::make_unique<Scene>();
 
-	GameObject* obj2 = scene.instantiateObject();
+	//GameObject* obj = m_scene->instantiateObject();
+	//auto rc = obj->addComponent<RenderComponent>();
+
+	GameObject* obj2 = m_scene->instantiateObject();
 	addComponents<RenderSystem, PhysicsSystem>(*obj2);
 
 	while (window.isOpen()) {
@@ -37,4 +38,9 @@ void GameManager::run()
 
 		renderSys.update();
 	}
+}
+
+GameObject* GameManager::getObjectByID(uint32_t id)
+{
+	return m_scene->getObjectByID(id);
 }

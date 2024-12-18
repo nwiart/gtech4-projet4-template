@@ -4,7 +4,12 @@
 
 class PhysicsComponent
 {
+	friend class PhysicsSystem;
+
 public:
+
+	typedef class PhysicsSystem SystemType;
+
 
 	PhysicsComponent();
 

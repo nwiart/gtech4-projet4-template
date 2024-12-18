@@ -1,6 +1,8 @@
 #pragma once
 
-class GameObject;
+#include "GameObject.h"
+
+#include <unordered_map>
 
 
 class Scene
@@ -13,7 +15,12 @@ public:
 
 	void destroyObject(GameObject* obj);
 
+	GameObject* getObjectByID(uint32_t id);
+
 
 private:
 
+	std::unordered_map<uint32_t, GameObject> m_gameObjects;
+
+	uint32_t m_currentID;
 };
