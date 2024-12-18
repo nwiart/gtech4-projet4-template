@@ -51,13 +51,13 @@ public:
 	template<typename ComponentType>
 	ComponentType& get(GameObject& obj)
 	{
-		return SystemData<ComponentType::SystemType>::get<ComponentType>(obj);
+		return SystemData<typename ComponentType::SystemType>::get<ComponentType>(obj);
 	}
 
 	template<typename ComponentType>
 	bool has(GameObject& obj)
 	{
-		return SystemData<ComponentType::SystemType>::has(obj);
+		return SystemData<typename ComponentType::SystemType>::has(obj);
 	}
 
 	template<typename SystemType>
