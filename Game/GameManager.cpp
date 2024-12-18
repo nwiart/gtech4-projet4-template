@@ -40,7 +40,15 @@ void GameManager::run()
 			}
 		}
 
-		obj3->setPosition(obj3->getPosition() + sf::Vector2f(1, 0));
+		if (obj3) {
+			obj3->setPosition(obj3->getPosition() + sf::Vector2f(1, 0));
+
+			if (obj3->getPosition().x > 300) {
+				g_systems.remove(*obj3);
+				m_scene->destroyObject(obj3);
+				obj3 = 0;
+			}
+		}
 
 		g_systems.getSystem<RectSystem>().update(0);
 		g_systems.getSystem<CircleSystem>().update(0);

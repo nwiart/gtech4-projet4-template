@@ -23,7 +23,7 @@ GameObject* Scene::instantiateObject()
 
 void Scene::destroyObject(GameObject* obj)
 {
-	delete obj;
+	m_gameObjects.erase(obj->getID());
 }
 
 GameObject* Scene::getObjectByID(uint32_t id)

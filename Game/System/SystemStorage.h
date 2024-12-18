@@ -43,10 +43,9 @@ public:
 		(SystemData<Systems>::add(obj), ...);
 	}
 
-	template<typename... Systems>
 	void remove(GameObject& obj)
 	{
-		(SystemData<Systems>::remove(obj), ...);
+		(SystemData<ProcessType>::remove(obj), ...);
 	}
 
 	template<typename ComponentType>
