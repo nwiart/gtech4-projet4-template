@@ -138,7 +138,6 @@
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="System\ScoreManager.cpp" />
-    <ClCompile Include="TActor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component\PhysicsComponent.h" />
@@ -148,7 +147,6 @@
     <ClCompile Include="Scene\GameObject.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="System\RenderSystem.cpp" />
-    <ClInclude Include="TActor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component\RenderComponent.h" />

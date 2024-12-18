@@ -1,4 +1,7 @@
+#include "GameManager.h"
+
 #include "GameObject.h"
+
 
 void GameObject::setPosition(const sf::Vector2f& newPosition)
 {

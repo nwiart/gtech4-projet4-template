@@ -20,6 +20,8 @@ public:
 
 	void update();
 
+	RenderComponent& get(GameObject& obj);
+
 	inline sf::RenderWindow& getSfmlWindow() { return m_window; }
 
 

@@ -12,6 +12,9 @@ public:
 
 	inline void remove(GameObject& obj) { m_data.remove(obj); }
 
+	template<typename ComponentType>
+	inline ComponentType& get(GameObject& obj) { return m_data.get(obj); }
+
 	inline SystemType& getInstance() { return m_data; }
 
 private:
@@ -42,6 +45,12 @@ public:
 	void remove(GameObject& obj)
 	{
 		(SystemData<Systems>::remove(obj), ...);
+	}
+
+	template<typename ComponentType>
+	ComponentType& get(GameObject& obj)
+	{
+		return SystemData<ComponentType::SystemType>::get<ComponentType>(obj);
 	}
 
 	template<typename SystemType>

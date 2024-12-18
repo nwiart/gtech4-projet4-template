@@ -2,6 +2,7 @@
 
 #include "System/SystemStorage.h"
 
+class Scene;
 class GameObject;
 
 
@@ -26,10 +27,20 @@ public:
 	template<typename T>
 	T* addComponentToObject(GameObject& obj) { return 0; }
 
+	template<typename T>
+	T& getObjectComponent(GameObject& obj)
+	{
+		g_systems.get<T>(obj);
+	}
+
+	GameObject* getObjectByID(uint32_t id);
+
 
 private:
 
 	SystemStorage g_systems;
+
+	std::unique_ptr<Scene> m_scene;
 };
 
 

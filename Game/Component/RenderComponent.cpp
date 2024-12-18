@@ -2,5 +2,5 @@
 
 void RenderComponent::draw(sf::RenderWindow& wd) const
 {
-    //wd.draw();
+    //wd.draw(shape);
 }

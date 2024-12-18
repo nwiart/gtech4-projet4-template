@@ -16,9 +16,11 @@ public:
 
 	PhysicsComponent* add(GameObject& obj);
 
-	//void remove(GameObject& obj);
+	void remove(GameObject& obj);
 
-	//void update();
+	void update(float dt);
+
+	PhysicsComponent& get(GameObject& obj);
 
 
 private:
