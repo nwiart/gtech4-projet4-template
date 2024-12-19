@@ -69,11 +69,13 @@ public:
 #include "System/CircleSystem.h"
 #include "System/PhysicsSystem.h"
 #include "System/RenderSystem.h"
+#include "System/TextSystem.h"
 
 typedef SystemStorageBase<
 	RectSystem,
 	CircleSystem,
 	PhysicsSystem,
-	RenderSystem
+	RenderSystem,
+	TextSystem
 >
 SystemStorage;

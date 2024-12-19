@@ -35,6 +35,9 @@ void RenderSystem::update()
 		else if (obj->hasComponent<CircleComponent>()) {
 			m_window.draw(*reinterpret_cast<sf::CircleShape*>(obj->getComponent<CircleComponent>().getShape()));
 		}
+		else if (obj->hasComponent<TextComponent>()) {
+			m_window.draw(*reinterpret_cast<sf::Text*>(obj->getComponent<TextComponent>().getText()));
+		}
 	}
 
 	m_window.display();

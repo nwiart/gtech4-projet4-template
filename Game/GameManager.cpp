@@ -21,6 +21,17 @@ void GameManager::run()
 
 	m_scene = std::make_unique<Scene>();
 
+	sf::Font font;
+	font.loadFromFile("Newyear Goo.ttf");
+
+	GameObject* score = m_scene->instantiateObject();
+	addComponents<TextSystem, RenderSystem>(*score);
+	score->setPosition(sf::Vector2f((window.getSize().x / 2), (window.getSize().y - 500)));
+	score->getComponent<TextComponent>().setFont(font);
+	score->getComponent<TextComponent>().setString("hello");
+	score->getComponent<TextComponent>().setCharacterSize(24);
+	score->getComponent<TextComponent>().setColor(sf::Color::White);
+
 	sf::Texture brickTex;
 	brickTex.loadFromFile("brick.png");
 
@@ -60,7 +71,7 @@ void GameManager::run()
 	});
 
 	const sf::Vector2f brickSize(100.0f, 40.0f);
-	const float spacing = 10.0f;
+	const float spacing = 100.0f;
 	const float startX = (window.getSize().x - (brickSize.x * 4 + spacing * 3)) / 2;
 	const float startY = 50.0f;
 

@@ -167,6 +167,9 @@
     <ClInclude Include="System\System.h" />
     <ClInclude Include="System\RenderSystem.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Font Include="Newyear Goo.ttf" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

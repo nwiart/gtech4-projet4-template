@@ -21,6 +21,7 @@ void TextSystem::remove(GameObject& obj)
 
 void TextSystem::update(float dt)
 {
+
 }
 
 TextComponent& TextSystem::get(GameObject& obj)
