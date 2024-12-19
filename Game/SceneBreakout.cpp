@@ -13,6 +13,7 @@ void SceneBreakout::load()
 {
 	brickTex.loadFromFile("brick.png");
 	font.loadFromFile("Newyear Goo.ttf");
+
 }
 
 void SceneBreakout::spawn()
@@ -21,6 +22,23 @@ void SceneBreakout::spawn()
 	sf::Window& window = man.getSystem<RenderSystem>().getSfmlWindow();
 
 	ScoreManager::getInstance().resetScore();
+
+	m_menuText = this->instantiateObject();
+	man.addComponents<TextSystem, RenderSystem>(*m_menuText);
+	m_menuText->setPosition(sf::Vector2f(200, 300));
+	m_menuText->getComponent<TextComponent>().setFont(font);
+	m_menuText->getComponent<TextComponent>().setString("Press Enter to Start");
+	m_menuText->getComponent<TextComponent>().setCharacterSize(36);
+
+	m_gameOverText = this->instantiateObject();
+	man.addComponents<TextSystem, RenderSystem>(*m_gameOverText);
+	m_gameOverText->setPosition(sf::Vector2f(150, 300));
+	m_gameOverText->getComponent<TextComponent>().setFont(font);
+	m_gameOverText->getComponent<TextComponent>().setString("Game Over! Press R to Restart");
+	m_gameOverText->getComponent<TextComponent>().setCharacterSize(36);
+
+	m_menuText->getComponent<TextComponent>().setColor(sf::Color::White);
+	m_gameOverText->getComponent<TextComponent>().setColor(sf::Color::Transparent);
 
 	// User-controlled paddle.
 	m_paddle = this->instantiateObject();
@@ -54,8 +72,8 @@ void SceneBreakout::spawn()
 		case PhysicsSystem::ScreenSide::TOP:    break;
 		case PhysicsSystem::ScreenSide::RIGHT:  break;
 		case PhysicsSystem::ScreenSide::BOTTOM:
-			GameManager::getInstance().getScene()->clear();
-			GameManager::getInstance().getScene()->spawn();
+			((SceneBreakout*)GameManager::getInstance().getScene().get())->gameState = GameState::GameOver;
+
 			break;
 		}
 		collA.setVelocity(v);
@@ -107,6 +125,33 @@ void SceneBreakout::update()
 {
 	GameManager& man = GameManager::getInstance();
 	sf::Window& window = man.getSystem<RenderSystem>().getSfmlWindow();
+
+	if (gameState == GameState::Menu) {
+		m_menuText->getComponent<TextComponent>().setColor(sf::Color::White);
+		m_gameOverText->getComponent<TextComponent>().setColor(sf::Color::Transparent);
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
+			gameState = GameState::Playing;
+			m_menuText->getComponent<TextComponent>().setColor(sf::Color::Transparent);
+			spawn();
+		}
+		return;
+	}
+
+	if (gameState == GameState::GameOver) {
+		m_menuText->getComponent<TextComponent>().setColor(sf::Color::Transparent);
+		m_gameOverText->getComponent<TextComponent>().setColor(sf::Color::White);
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+			gameState = GameState::Menu;
+			GameManager::getInstance().getScene()->clear();
+		}
+		return;
+	}
+
+	// Playing State
+	m_menuText->getComponent<TextComponent>().setColor(sf::Color::Transparent);
+	m_gameOverText->getComponent<TextComponent>().setColor(sf::Color::Transparent);
 
 	constexpr float PADDLE_SPEED = 10.0F;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))

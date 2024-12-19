@@ -5,8 +5,19 @@
 #include "Scene/Scene.h"
 
 
+
+
 class SceneBreakout : public Scene
 {
+	enum class GameState {
+		Menu,
+		Playing,
+		GameOver
+	};
+
+	GameState gameState = GameState::Menu;
+
+
 public:
 
 	SceneBreakout();
@@ -26,6 +37,8 @@ private:
 
 	GameObject* m_paddle;
 	GameObject* m_score;
+	GameObject* m_menuText;
+	GameObject* m_gameOverText;
 
 	sf::Texture brickTex;
 	sf::Font font;
