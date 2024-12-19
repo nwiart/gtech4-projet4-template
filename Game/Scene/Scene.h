@@ -13,6 +13,7 @@ public:
 
 	GameObject* instantiateObject();
 
+	void destroyObject(uint32_t id);
 	void destroyObject(GameObject* obj);
 
 	GameObject* getObjectByID(uint32_t id);

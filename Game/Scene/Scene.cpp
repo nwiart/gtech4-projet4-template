@@ -21,6 +21,11 @@ GameObject* Scene::instantiateObject()
 	return obj;
 }
 
+void Scene::destroyObject(uint32_t id)
+{
+	m_gameObjects.erase(id);
+}
+
 void Scene::destroyObject(GameObject* obj)
 {
 	m_gameObjects.erase(obj->getID());

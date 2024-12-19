@@ -21,6 +21,9 @@ void GameManager::run()
 
 	m_scene = std::make_unique<Scene>();
 
+	sf::Texture brickTex;
+	brickTex.loadFromFile("brick.png");
+
 	GameObject *paddle = m_scene->instantiateObject();
 	addComponents<RectSystem, RenderSystem, PhysicsSystem>(*paddle);
 	paddle->setPosition(sf::Vector2f((window.getSize().x / 2), (window.getSize().y - 100)));
@@ -33,15 +36,17 @@ void GameManager::run()
 	ball->getComponent<CircleComponent>().setColor(sf::Color::Red);
 	ball->getComponent<CircleComponent>().setRadius(10);
 	ball->getComponent<PhysicsComponent>().setVelocity(sf::Vector2f(300.0F, 300.0F));
-	ball->getComponent<PhysicsComponent>().setCollideObjectCallback([](GameObject &objA, PhysicsComponent &collA, GameObject &objB, PhysicsComponent &collB) -> bool
-																	{
+	ball->getComponent<PhysicsComponent>().setCollideObjectCallback([](GameObject &objA, PhysicsComponent &collA, GameObject &objB, PhysicsComponent &collB) -> bool {
+		bool isBrick = objB.getUserData() == 1;
 		sf::Vector2f v = collA.getVelocity();
+		if (!isBrick) {
+			v.x = 10.0F * (((objA.getPosition().x + 6.0F) - (objB.getPosition().x + 75.0F)));
+		}
 		v.y = -v.y;
-		v.x = 10.0F * (((objA.getPosition().x + 6.0F) - (objB.getPosition().x + 75.0F)));
 		collA.setVelocity(v);
-		return true; });
-	ball->getComponent<PhysicsComponent>().setCollideScreenCallback([](GameObject &objA, PhysicsComponent &collA, int side) -> bool
-																	{
+		return true;
+	});
+	ball->getComponent<PhysicsComponent>().setCollideScreenCallback([](GameObject &objA, PhysicsComponent &collA, int side) -> bool {
 		sf::Vector2f v = collA.getVelocity();
 		switch ((PhysicsSystem::ScreenSide) side)
 		{
@@ -51,46 +56,46 @@ void GameManager::run()
 		case PhysicsSystem::ScreenSide::BOTTOM: break;
 		}
 		collA.setVelocity(v);
-		return true; });
+		return true;
+	});
 
-	const sf::Vector2f brickSize(100.0f, 30.0f);
+	const sf::Vector2f brickSize(100.0f, 40.0f);
 	const float spacing = 10.0f;
 	const float startX = (window.getSize().x - (brickSize.x * 4 + spacing * 3)) / 2;
 	const float startY = 50.0f;
 
-	GameObject *brick = m_scene->instantiateObject();
-	addComponents<RenderSystem, RectSystem>(*brick);
-	brick->setPosition(sf::Vector2f(200, 100));
-	brick->getComponent<RectComponent>().setColor(sf::Color::Blue);
-	brick->getComponent<RectComponent>().setSize(brickSize);
+	uint32_t color[] =
+	{
+		0xFF2020ff, 0xFF8020ff, 0xFFFF00ff, 0x20FF20ff, 0x22AAFFff, 0x1050FFff, 0x6020FFff
+	};
+	int n = 0;
 
-	std::vector<GameObject *> bricks;
-
-	 for (int row = 0; row < 2; ++row) {
+	for (int row = 0; row < 2; ++row) {
 		for (int col = 0; col < 4; ++col) {
-			std::cout << "Creating brick at row " << row << ", col " << col << std::endl;
 
 			float posX = startX + col * (brickSize.x + spacing);
 			float posY = startY + row * (brickSize.y + spacing);
 
 			GameObject* brick = m_scene->instantiateObject();
-			if (!brick) {
-				std::cerr << "Failed to create brick at row " << row << ", col " << col << std::endl;
-				continue;
-			}
-
-			addComponents<RenderSystem, RectSystem>(*brick);
+			addComponents<RectSystem, PhysicsSystem, RenderSystem>(*brick);
+			brick->setUserData(1);
 			brick->setPosition(sf::Vector2f(posX, posY));
-			brick->getComponent<RectComponent>().setColor(sf::Color::Blue);
+			brick->getComponent<RectComponent>().setColor(sf::Color(color[n % 7]));
 			brick->getComponent<RectComponent>().setSize(brickSize);
-			std::cout << brick->getID() << std::endl;
+			brick->getComponent<RectComponent>().setTexture(brickTex);
+			brick->getComponent<PhysicsComponent>().setCollideObjectCallback([](GameObject &objA, PhysicsComponent &collA, GameObject &objB, PhysicsComponent &collB) -> bool {
+				GameManager::getInstance().destroyObject(objA);
+				return true;
+			});
 
-			bricks.push_back(brick);
+			n++;
 		}
 	}
 
 	while (window.isOpen())
 	{
+		processPendingActions();
+
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
@@ -125,7 +130,24 @@ void GameManager::run()
 	}
 }
 
+void GameManager::destroyObject(GameObject& obj)
+{
+	if (obj.isMarkedForDeletion()) return;
+
+	obj.markForDeletion();
+	m_markedForDeletion.push_back(obj);
+}
+
 GameObject *GameManager::getObjectByID(uint32_t id)
 {
 	return m_scene->getObjectByID(id);
+}
+
+void GameManager::processPendingActions()
+{
+	for (uint32_t id : m_markedForDeletion) {
+		g_systems.remove(*m_scene->getObjectByID(id));
+		m_scene->destroyObject(id);
+	}
+	m_markedForDeletion.clear();
 }

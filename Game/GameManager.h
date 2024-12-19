@@ -2,6 +2,8 @@
 
 #include "System/SystemStorage.h"
 
+#include <vector>
+
 class Scene;
 class GameObject;
 
@@ -39,7 +41,13 @@ public:
 		return g_systems.has<T>(obj);
 	}
 
+	void destroyObject(GameObject& obj);
+
 	GameObject* getObjectByID(uint32_t id);
+
+	void processPendingActions();
+
+	inline std::unique_ptr<Scene>& getScene() { return m_scene; }
 
 
 private:
@@ -47,6 +55,7 @@ private:
 	SystemStorage g_systems;
 
 	std::unique_ptr<Scene> m_scene;
+	std::vector<uint32_t> m_markedForDeletion;
 };
 
 

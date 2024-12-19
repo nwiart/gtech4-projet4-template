@@ -26,7 +26,6 @@ void RectSystem::update(float dt)
         sf::RectangleShape* shape = reinterpret_cast<sf::RectangleShape*>(comp.getShape());
 
         shape->setPosition(obj->getPosition());
-        shape->setFillColor(sf::Color::Cyan);
     }
 }
 

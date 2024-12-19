@@ -27,7 +27,6 @@ void CircleSystem::update(float dt)
 
         shape->setPosition(obj->getPosition());
         shape->setRadius(25.0F);
-        shape->setFillColor(sf::Color::Cyan);
     }
 }
 
