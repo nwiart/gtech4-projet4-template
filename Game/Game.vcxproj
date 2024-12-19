@@ -140,11 +140,13 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="System\RectSystem.cpp" />
     <ClCompile Include="System\ScoreManager.cpp" />
+    <ClCompile Include="System\TextSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component\CircleComponent.h" />
     <ClInclude Include="Component\PhysicsComponent.h" />
     <ClInclude Include="Component\RectComponent.h" />
+    <ClInclude Include="Component\TextComponent.h" />
     <ClInclude Include="IncludeSFML.h" />
     <ClInclude Include="System\CircleSystem.h" />
     <ClInclude Include="System\RectSystem.h" />
@@ -154,6 +156,7 @@
     <ClCompile Include="Scene\GameObject.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="System\RenderSystem.cpp" />
+    <ClInclude Include="System\TextSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component\RenderComponent.h" />
