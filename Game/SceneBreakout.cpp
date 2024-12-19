@@ -1,6 +1,8 @@
 #include "GameManager.h"
 #include "SceneBreakout.h"
 
+#include "System/ScoreManager.h"
+
 
 SceneBreakout::SceneBreakout()
 {
@@ -10,12 +12,15 @@ SceneBreakout::SceneBreakout()
 void SceneBreakout::load()
 {
 	brickTex.loadFromFile("brick.png");
+	font.loadFromFile("Newyear Goo.ttf");
 }
 
 void SceneBreakout::spawn()
 {
 	GameManager& man = GameManager::getInstance();
 	sf::Window& window = man.getSystem<RenderSystem>().getSfmlWindow();
+
+	ScoreManager::getInstance().resetScore();
 
 	// User-controlled paddle.
 	m_paddle = this->instantiateObject();
@@ -82,14 +87,20 @@ void SceneBreakout::spawn()
 			brick->getComponent<RectComponent>().setColor(sf::Color(color[n % 7]));
 			brick->getComponent<RectComponent>().setSize(brickSize);
 			brick->getComponent<RectComponent>().setTexture(brickTex);
-			brick->getComponent<PhysicsComponent>().setCollideObjectCallback([](GameObject& objA, PhysicsComponent& collA, GameObject& objB, PhysicsComponent& collB) -> bool {
-				GameManager::getInstance().destroyObject(objA);
-				return true;
-			});
+			brick->getComponent<PhysicsComponent>().setCollideObjectCallback(onBrickCollide);
 
 			n++;
 		}
 	}
+
+	// Score display.
+	m_score = this->instantiateObject();
+	man.addComponents<TextSystem, RenderSystem>(*m_score);
+	m_score->setPosition(sf::Vector2f((window.getSize().x / 2), (window.getSize().y - 500)));
+	m_score->getComponent<TextComponent>().setFont(font);
+	m_score->getComponent<TextComponent>().setString("Score : 0");
+	m_score->getComponent<TextComponent>().setCharacterSize(24);
+	m_score->getComponent<TextComponent>().setColor(sf::Color::White);
 }
 
 void SceneBreakout::update()
@@ -112,4 +123,19 @@ void SceneBreakout::update()
 			m_paddle->setPosition(m_paddle->getPosition() + sf::Vector2f(PADDLE_SPEED, 0));
 		}
 	}
+}
+
+bool SceneBreakout::onBrickCollide(GameObject& objA, PhysicsComponent& collA, GameObject& objB, PhysicsComponent& collB)
+{
+	// Destroy brick object and increment score.
+	GameManager::getInstance().destroyObject(objA);
+	ScoreManager::getInstance().updateScore();
+
+	// Update score text.
+	GameObject* score = ((SceneBreakout*)GameManager::getInstance().getScene().get())->m_score;
+	std::string str = "Score : ";
+	str += std::to_string(ScoreManager::getInstance().getCurrentScore());
+	score->getComponent<TextComponent>().setString(str);
+
+	return true;
 }

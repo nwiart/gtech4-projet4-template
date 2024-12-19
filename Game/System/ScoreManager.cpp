@@ -9,7 +9,7 @@ ScoreManager::~ScoreManager()
 {
 }
 
-void ScoreManager::updateScore(int score)
+void ScoreManager::updateScore()
 {
     currentScore++;
 }

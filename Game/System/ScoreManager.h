@@ -6,8 +6,10 @@ public:
     ScoreManager();
     ~ScoreManager();
 
-    void updateScore(int score);
+    void updateScore();
     void resetScore();
+
+    inline int getCurrentScore() const { return currentScore; }
 
     static ScoreManager& getInstance()
     {

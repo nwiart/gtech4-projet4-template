@@ -26,6 +26,7 @@ void GameManager::run()
 	m_scene->load();
 	m_scene->spawn();
 
+
 	while (window.isOpen())
 	{
 		processPendingActions();

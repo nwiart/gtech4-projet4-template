@@ -17,10 +17,16 @@ public:
 
 	virtual void update() override;
 
+private:
+
+	static bool onBrickCollide(GameObject& objA, PhysicsComponent& collA, GameObject& objB, PhysicsComponent& collB);
+
 
 private:
 
 	GameObject* m_paddle;
+	GameObject* m_score;
 
 	sf::Texture brickTex;
+	sf::Font font;
 };
