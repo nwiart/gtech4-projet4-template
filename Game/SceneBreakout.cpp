@@ -39,6 +39,64 @@ void SceneBreakout::spawn()
 
 	m_menuText->getComponent<TextComponent>().setColor(sf::Color::White);
 	m_gameOverText->getComponent<TextComponent>().setColor(sf::Color::Transparent);
+}
+
+void SceneBreakout::update()
+{
+	GameManager& man = GameManager::getInstance();
+	sf::Window& window = man.getSystem<RenderSystem>().getSfmlWindow();
+
+	switch (gameState)
+	{
+	case GameState::Menu:
+		m_menuText->getComponent<TextComponent>().setColor(sf::Color::White);
+		m_gameOverText->getComponent<TextComponent>().setColor(sf::Color::Transparent);
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
+			gameState = GameState::Playing;
+			m_menuText->getComponent<TextComponent>().setColor(sf::Color::Transparent);
+			startGame();
+		}
+		return;
+
+	case GameState::GameOver:
+		m_menuText->getComponent<TextComponent>().setColor(sf::Color::Transparent);
+		m_gameOverText->getComponent<TextComponent>().setColor(sf::Color::White);
+		m_score->getComponent<TextComponent>().setColor(sf::Color::Transparent);
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+			gameState = GameState::Menu;
+			GameManager::getInstance().getScene()->clear();
+			GameManager::getInstance().getScene()->spawn();
+		}
+		return;
+
+	case GameState::Playing:
+		m_menuText->getComponent<TextComponent>().setColor(sf::Color::Transparent);
+		m_gameOverText->getComponent<TextComponent>().setColor(sf::Color::Transparent);
+
+		constexpr float PADDLE_SPEED = 10.0F;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+		{
+			if (m_paddle->getPosition().x > 0)
+			{
+				m_paddle->setPosition(m_paddle->getPosition() - sf::Vector2f(PADDLE_SPEED, 0));
+			}
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+		{
+			if (m_paddle->getPosition().x + 150 < window.getSize().x)
+			{
+				m_paddle->setPosition(m_paddle->getPosition() + sf::Vector2f(PADDLE_SPEED, 0));
+			}
+		}
+	}
+}
+
+void SceneBreakout::startGame()
+{
+	GameManager& man = GameManager::getInstance();
+	sf::Window& window = man.getSystem<RenderSystem>().getSfmlWindow();
 
 	// User-controlled paddle.
 	m_paddle = this->instantiateObject();
@@ -63,7 +121,7 @@ void SceneBreakout::spawn()
 		v.y = -v.y;
 		collA.setVelocity(v);
 		return true;
-	});
+		});
 	ball->getComponent<PhysicsComponent>().setCollideScreenCallback([](GameObject& objA, PhysicsComponent& collA, int side) -> bool {
 		sf::Vector2f v = collA.getVelocity();
 		switch ((PhysicsSystem::ScreenSide)side)
@@ -78,7 +136,7 @@ void SceneBreakout::spawn()
 		}
 		collA.setVelocity(v);
 		return true;
-	});
+		});
 
 	// Bricks.
 	const sf::Vector2f brickSize(100.0f, 40.0f);
@@ -92,8 +150,8 @@ void SceneBreakout::spawn()
 	};
 	int n = 0;
 
-	for (int row = 0; row < 2; ++row) {
-		for (int col = 0; col < 4; ++col) {
+	for (int row = 0; row < 5; ++row) {
+		for (int col = 0; col < 6; ++col) {
 
 			float posX = startX + col * (brickSize.x + spacing);
 			float posY = startY + row * (brickSize.y + spacing);
@@ -119,55 +177,6 @@ void SceneBreakout::spawn()
 	m_score->getComponent<TextComponent>().setString("Score : 0");
 	m_score->getComponent<TextComponent>().setCharacterSize(24);
 	m_score->getComponent<TextComponent>().setColor(sf::Color::White);
-}
-
-void SceneBreakout::update()
-{
-	GameManager& man = GameManager::getInstance();
-	sf::Window& window = man.getSystem<RenderSystem>().getSfmlWindow();
-
-	if (gameState == GameState::Menu) {
-		m_menuText->getComponent<TextComponent>().setColor(sf::Color::White);
-		m_gameOverText->getComponent<TextComponent>().setColor(sf::Color::Transparent);
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
-			gameState = GameState::Playing;
-			m_menuText->getComponent<TextComponent>().setColor(sf::Color::Transparent);
-			spawn();
-		}
-		return;
-	}
-
-	if (gameState == GameState::GameOver) {
-		m_menuText->getComponent<TextComponent>().setColor(sf::Color::Transparent);
-		m_gameOverText->getComponent<TextComponent>().setColor(sf::Color::White);
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
-			gameState = GameState::Menu;
-			GameManager::getInstance().getScene()->clear();
-		}
-		return;
-	}
-
-	// Playing State
-	m_menuText->getComponent<TextComponent>().setColor(sf::Color::Transparent);
-	m_gameOverText->getComponent<TextComponent>().setColor(sf::Color::Transparent);
-
-	constexpr float PADDLE_SPEED = 10.0F;
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-	{
-		if (m_paddle->getPosition().x > 0)
-		{
-			m_paddle->setPosition(m_paddle->getPosition() - sf::Vector2f(PADDLE_SPEED, 0));
-		}
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-	{
-		if (m_paddle->getPosition().x + 150 < window.getSize().x)
-		{
-			m_paddle->setPosition(m_paddle->getPosition() + sf::Vector2f(PADDLE_SPEED, 0));
-		}
-	}
 }
 
 bool SceneBreakout::onBrickCollide(GameObject& objA, PhysicsComponent& collA, GameObject& objB, PhysicsComponent& collB)

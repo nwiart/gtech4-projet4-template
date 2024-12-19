@@ -30,6 +30,8 @@ public:
 
 private:
 
+	void startGame();
+
 	static bool onBrickCollide(GameObject& objA, PhysicsComponent& collA, GameObject& objB, PhysicsComponent& collB);
 
 
