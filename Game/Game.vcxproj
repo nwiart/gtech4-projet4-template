@@ -133,6 +133,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Component\PhysicsComponent.cpp" />
+    <ClCompile Include="SceneBreakout.cpp" />
     <ClCompile Include="System\CircleSystem.cpp" />
     <ClCompile Include="System\PhysicsSystem.cpp" />
     <ClCompile Include="Component\RenderComponent.cpp" />
@@ -148,6 +149,7 @@
     <ClInclude Include="Component\RectComponent.h" />
     <ClInclude Include="Component\TextComponent.h" />
     <ClInclude Include="IncludeSFML.h" />
+    <ClInclude Include="SceneBreakout.h" />
     <ClInclude Include="System\CircleSystem.h" />
     <ClInclude Include="System\RectSystem.h" />
     <ClInclude Include="System\SystemStorage.h" />

@@ -11,6 +11,13 @@ Scene::Scene()
 	
 }
 
+void Scene::clear()
+{
+	for (auto& [id, obj] : m_gameObjects) {
+		GameManager::getInstance().destroyObject(obj);
+	}
+}
+
 GameObject* Scene::instantiateObject()
 {
 	auto it = m_gameObjects.emplace(m_currentID, GameObject{ m_currentID });

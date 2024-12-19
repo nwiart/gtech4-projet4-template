@@ -11,6 +11,12 @@ public:
 
 	Scene();
 
+	virtual void load() { }
+	virtual void spawn() { }
+	virtual void update() { }
+	
+	void clear();
+
 	GameObject* instantiateObject();
 
 	void destroyObject(uint32_t id);

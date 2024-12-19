@@ -41,6 +41,12 @@ public:
 		return g_systems.has<T>(obj);
 	}
 
+	template<typename T>
+	inline T& getSystem()
+	{
+		return g_systems.getSystem<T>();
+	}
+
 	void destroyObject(GameObject& obj);
 
 	GameObject* getObjectByID(uint32_t id);
