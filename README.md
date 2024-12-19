@@ -1,7 +1,7 @@
 ### Demarche de comment build le projet
-Clone project 
+- Clone project 
 
-Open sln
+- Open sln
 
-Press f5
+- Press f5
 
